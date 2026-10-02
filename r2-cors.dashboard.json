@@ -1,0 +1,3 @@
+[
+ {"AllowedOrigins":["*"],"AllowedMethods":["GET","HEAD"],"ExposeHeaders":["ETag","Age","CF-Cache-Status"],"MaxAgeSeconds":3600}
+]

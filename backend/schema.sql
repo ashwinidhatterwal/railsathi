@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS trips (id TEXT PRIMARY KEY,trip_id TEXT NOT NULL,data TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY,trip_id TEXT NOT NULL,data TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS observations (id TEXT PRIMARY KEY,trip_id TEXT NOT NULL,data TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS sessions_trip ON sessions(trip_id);
+CREATE INDEX IF NOT EXISTS observations_trip ON observations(trip_id);
+
+CREATE TABLE IF NOT EXISTS live_leases (trip_id TEXT PRIMARY KEY,token_hash TEXT NOT NULL,lease_until INTEGER NOT NULL);

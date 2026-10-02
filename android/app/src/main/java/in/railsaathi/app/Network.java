@@ -1,0 +1,7 @@
+package in.railsaathi.app;
+import java.net.*;import java.io.*;import java.nio.charset.StandardCharsets;import org.json.JSONObject;
+final class Network {
+ static final class ApiException extends IOException { final int status;ApiException(int code,String text){super(text);status=code;} }
+ static String readText(InputStream stream)throws IOException { try(InputStream in=stream;ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] bytes=new byte[4096];int n;while((n=in.read(bytes))!=-1)out.write(bytes,0,n);return out.toString("UTF-8");}}
+ static JSONObject request(String endpoint,String method,String token,JSONObject body)throws Exception {HttpURLConnection c=(HttpURLConnection)new URL(endpoint).openConnection();c.setConnectTimeout(15000);c.setReadTimeout(15000);c.setInstanceFollowRedirects(false);c.setRequestMethod(method);c.setRequestProperty("Authorization","Bearer "+token);c.setRequestProperty("User-Agent","RailSaathi/0.2 Android");try{if(body!=null){c.setDoOutput(true);c.setRequestProperty("Content-Type","application/json");try(OutputStream out=c.getOutputStream()){out.write(body.toString().getBytes(StandardCharsets.UTF_8));}}int status=c.getResponseCode();InputStream stream=status>=400?c.getErrorStream():c.getInputStream();String text=stream==null?"{}":readText(stream);JSONObject result=new JSONObject(text);if(status<200||status>=300)throw new ApiException(status,result.optString("error","Upload failed ("+status+")"));return result;}finally{c.disconnect();}}
+}

@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+android/.gradle/
+android/local.properties
+android/**/build/
+backend/local-data.json
+.env
+*.jks
