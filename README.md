@@ -1,4 +1,4 @@
-# RailSaathi 0.2 — shared live position snapshots
+# RailSaathi 0.2.1 — shared live position snapshots
 
 This source update builds on the working 0.1 demo. It implements 15-second moving-train sharing, 10-second viewer refreshes, public position snapshots, primary/backup contributors and shorter prediction. No backend has been deployed by this update. No new APK is included or locally compiled. The previous 0.1 APK still uses the old protocol and must be replaced with a 0.2 build for testing this implementation.
 
@@ -9,6 +9,18 @@ This package replaces the Android setup action's default `tools` package with ex
 Extract this archive, then upload the CONTENTS of the `RailSaathi` folder to the repository root, including `.github/workflows/android.yml`. The repository root must contain `android`, `web`, `backend` and `.github`; do not put everything inside another `RailSaathi` directory in the repository. Commit on the branch you build (the latest failed run used `main`). The push starts a new Actions run. Re-running the older failed commit would still use its older workflow.
 
 After a successful run, open its Artifacts section, download `RailSaathi-test-apk`, extract it and install `app-debug.apk`. No backend is deployed by building the APK.
+
+## Current owner choice: no billing, fixed connection
+
+The app now connects automatically to `https://railsaathi.actionbridge.workers.dev`. Connection settings are hidden and old saved backend overrides are ignored. The native Android upload service receives that same fixed address when contribution begins. Pilot journeys and private contributor codes remain in place; this does not remove contributor admission controls.
+
+Use the default `wrangler.jsonc`, which binds only D1 and assets. Do not use the R2 example configuration, enable R2, or upgrade Workers to a paid plan. The current app uses the Worker snapshot endpoint, so viewer downloads still consume Worker requests; this is a bounded free pilot rather than unlimited CDN delivery. Your existing domain does not need any DNS changes for this release.
+
+Upload the complete source to GitHub and build the new APK. Install it, then search for your existing test journey without entering a backend address. The existing backend already supports this app protocol, so rebuilding the APK requires no database recreation or administrator-key change. Redeploying the source is optional unless you want the browser interface to have the same fixed-address configuration.
+
+One ten-minute viewer session refreshes about 60 times at the ten-second cadence. 1,000 such daily viewers create around 60,000 viewing requests plus opening/search, contributor uploads and other overhead. 5,000 create around 300,000 viewing requests and exceed the free Worker's 100,000 daily account request quota before other work. All Workers in the same account share that request budget. Measure real usage and keep the pilot below limits; choosing a custom hostname would not remove the quota.
+
+The next product milestone is verified train discovery and simpler contributor admission. Keep the working two-phone test available while developing those features.
 
 ## Behavior
 
@@ -106,7 +118,7 @@ Open `android` in Android Studio, or upload the complete project including `.git
 gradle -p android assembleDebug
 ```
 
-Output: `android/app/build/outputs/apk/debug/app-debug.apk`. Version code is 2 and version name is 0.2.0. Debug signing is for tests only. A newly generated debug key may require uninstalling the prior demo APK; that clears app data. Retain a stable release key before distribution. This workspace had no Android SDK/Gradle, so Java changes have not been compiled or linted here.
+Output: `android/app/build/outputs/apk/debug/app-debug.apk`. Version code is 3 and version name is 0.2.1. Debug signing is for tests only. A newly generated debug key may require uninstalling the prior demo APK; that clears app data. Retain a stable release key before distribution. This workspace had no Android SDK/Gradle, so Java changes have not been compiled or linted here.
 
 ## Free-tier pilot budget
 
