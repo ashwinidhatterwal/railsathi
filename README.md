@@ -2,6 +2,14 @@
 
 This source update builds on the working 0.1 demo. It implements 15-second moving-train sharing, 10-second viewer refreshes, public position snapshots, primary/backup contributors and shorter prediction. No backend has been deployed by this update. No new APK is included or locally compiled. The previous 0.1 APK still uses the old protocol and must be replaced with a 0.2 build for testing this implementation.
 
+## Fixed GitHub Actions workflow — 2 October 2026
+
+This package replaces the Android setup action's default `tools` package with explicit `platform-tools`, `platforms;android-35` and `build-tools;35.0.0`. The failed run stopped at SDK setup with `Failed to find package 'tools'`, before compilation. The corrected workflow also enables Gradle stack traces and fails if the APK artifact is missing. This fixes the observed setup error; a successful cloud build is still required to verify compilation.
+
+Extract this archive, then upload the CONTENTS of the `RailSaathi` folder to the repository root, including `.github/workflows/android.yml`. The repository root must contain `android`, `web`, `backend` and `.github`; do not put everything inside another `RailSaathi` directory in the repository. Commit on the branch you build (the latest failed run used `main`). The push starts a new Actions run. Re-running the older failed commit would still use its older workflow.
+
+After a successful run, open its Artifacts section, download `RailSaathi-test-apk`, extract it and install `app-debug.apk`. No backend is deployed by building the APK.
+
 ## Behavior
 
 - Android collects precise GPS about every five seconds through an explicitly started foreground location service. The operating system may delay delivery.
